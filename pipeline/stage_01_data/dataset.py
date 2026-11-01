@@ -87,6 +87,19 @@ class PhotosDataset(Dataset):
         transforms: PairTransform | None = None,
         ids: Sequence[str] | None = None,
     ) -> None:
+        """Arguments
+        ---------
+        images_dir : str
+            Path to directory with images
+            
+        target_dir : str
+            Path to directory with masks.
+            Each mask corresponds to one image.
+            Corresponding mask and image have the same name, but different format.
+            
+        transforms : some collection
+            Sequence of transformations for images and masks. 
+        """
         self.images_dir = Path(images_dir)
         self.target_dir = Path(target_dir) if target_dir is not None else None
         self._images, self._masks = index_image_mask_pairs(self.images_dir, self.target_dir)
@@ -118,6 +131,15 @@ class PhotosDataset(Dataset):
         self,
         idx: int,
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
+        """Arguments
+        ---------
+        idx : int
+            Index of image and mask
+        
+        Returns
+        -------
+        (image, mask)
+        """
         image, mask = self.read_pair(idx)
         _check_pair(image, mask, check_values=self.transforms is not None)
         if self.transforms is not None:

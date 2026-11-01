@@ -32,6 +32,19 @@ class DiceLoss(nn.Module):
         reduction: Reduction = None,
         with_logits: bool = True,
     ) -> None:
+        """Arguments
+        ---------
+        eps : float
+            eps in denominator
+        reduction : Optional[str] (None, 'mean' or 'sum')
+            specifies the reduction to apply to the output:
+            
+            None: no reduction will be applied
+            'mean': the sum of the output will be divided by the number of elements in the batch
+            'sum':  the output will be summed. 
+        with_logits : bool
+            If True, use additional sigmoid for inputs
+        """
         super().__init__()
         _validate_reduction(reduction)
         if not isfinite(eps) or eps <= 0:
@@ -43,6 +56,18 @@ class DiceLoss(nn.Module):
         logits: torch.Tensor,
         true_labels: torch.Tensor,
     ) -> torch.Tensor:
+        """Arguments
+        ---------
+        logits: torch.Tensor
+            Unnormalized probability of true class. Shape: [B, ...]
+        true_labels: torch.Tensor
+            Mask of correct predictions. Shape: [B, ...]
+        Returns
+        -------
+        torch.Tensor
+            If reduction is 'mean' or 'sum' returns a tensor with a single element
+            Otherwise, returns a tensor of shape [B]
+        """
         _check_shapes(logits, true_labels)
         # Float32 reductions avoid FP16 overflow for 320×240 masks.
         probabilities = logits.float().sigmoid() if self.with_logits else logits.float()
@@ -105,6 +130,20 @@ class IoUScore(nn.Module):
         threshold: float = 0.0,
         reduction: Reduction = None,
     ) -> None:
+        """Arguments
+        ---------
+        threshold : float
+            threshold for logits binarization
+        reduction : Optional[str] (None, 'mean' or 'sum')
+            specifies the reduction to apply to the output:
+            
+            None: no reduction will be applied
+            'mean': the sum of the output will be divided by the number of elements in the batch
+            'sum':  the output will be summed.
+        
+        The original stub mentions with_logits, but its signature has no such parameter.
+        This implementation thresholds logits directly.
+        """
         super().__init__()
         _validate_reduction(reduction)
         if not isfinite(threshold):
@@ -117,6 +156,18 @@ class IoUScore(nn.Module):
         logits: torch.Tensor,
         true_labels: torch.Tensor,
     ) -> torch.Tensor:
+        """Arguments
+        ---------
+        logits: torch.Tensor
+            Unnormalized probability of true class. Shape: [B, ...]
+        true_labels: torch.Tensor
+            Mask of correct predictions. Shape: [B, ...]
+        Returns
+        -------
+        torch.Tensor
+            If reduction is 'mean' or 'sum' returns a tensor with a single element
+            Otherwise, returns a tensor of shape [B]
+        """
         scores = overlap_scores(logits, true_labels, self.threshold)["iou"]
         if self.reduction == "mean":
             return scores.nanmean()

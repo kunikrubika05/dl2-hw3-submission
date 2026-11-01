@@ -1,11 +1,11 @@
 # HW3: сегментация людей
 
-Реализация U-Net/LinkNet, обучение, аугментации и постобработка для notebook
+U-Net/LinkNet, обучение, аугментации и постобработка
 
-Python 3.10–3.13. Установка: `python -m pip install -e .`
-
-[Исходные данные](https://disk.yandex.ru/d/tI6d3LBMHTwOnw) сохраните в `data/raw/people_data.zip` относительно репозитория
+Python 3.10–3.13 · установка: `python -m pip install -e .`
 
 В notebook `run_path(str(repo / "bootstrap.py"))` устанавливает пакет и выбирает рабочий каталог
 
-Веса и логи передаются отдельно
+[Исходные данные](https://disk.yandex.ru/d/tI6d3LBMHTwOnw) включены: `data/raw/people_data.zip`
+
+[Веса для notebook](https://github.com/kunikrubika05/dl2-hw3-submission/releases/tag/models-v1) · [Лучшие веса и TensorBoard-логи экспериментов](https://github.com/kunikrubika05/dl2-hw3-submission/releases/tag/submission-artifacts)
