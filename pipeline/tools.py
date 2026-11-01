@@ -12,7 +12,7 @@ def enable_notebook_updates(
     Python 3.12 removed imp; IPython 7.34 still imports reload from it.
     Apply the upstream importlib equivalent without upgrading IPython.
     """
-    from importlib import metadata, util
+    from importlib import util
     try:
         from IPython import get_ipython
     except ImportError:
@@ -21,13 +21,6 @@ def enable_notebook_updates(
     shell = get_ipython()
     if shell is None:
         return
-    try:
-        requirements = metadata.requires("google-colab") or []
-    except metadata.PackageNotFoundError:
-        requirements = []
-    # Undo only the 8.37 upgrade previously introduced by our notebook.
-    if metadata.version("ipython") == "8.37.0" and "ipython==7.34.0" in [item.replace(" ", "") for item in requirements]:
-        subprocess.run([sys.executable, "-m", "pip", "install", "--no-deps", "ipython==7.34.0"], check=True)
     path = Path(util.find_spec("IPython.extensions.autoreload").origin)
     source = path.read_text(encoding="utf-8")
     if "from imp import reload" in source:
