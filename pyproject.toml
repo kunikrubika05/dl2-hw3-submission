@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dl2-hw3-cv"
+version = "0.1.0"
+description = "HW3: image segmentation experiments"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "torch>=2.6,<3",
+    "numpy>=1.26,<3",
+    "scipy>=1.11,<2",
+    "albumentations==2.0.8",
+    "Pillow>=10,<14",
+    "matplotlib>=3.8,<4",
+    "pytorch-ignite==0.5.5",
+    "tensorboard>=2.18,<3",
+    "rich>=13.9,<15",
+    "psutil>=5.9,<8",
+]
+
+[tool.setuptools.packages.find]
+include = ["pipeline*"]
